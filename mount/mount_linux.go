@@ -25,6 +25,7 @@ import (
 	"time"
 
 	"github.com/containerd/containerd/sys"
+	"github.com/sirupsen/logrus"
 	"github.com/pkg/errors"
 	"golang.org/x/sys/unix"
 )
@@ -43,6 +44,11 @@ func init() {
 // If m.Type starts with "fuse." or "fuse3.", "mount.fuse" or "mount.fuse3"
 // helper binary is called.
 func (m *Mount) Mount(target string) (err error) {
+    source := m.Source
+    logrus.Errorf("test source-path: %s", source)
+    if source == "/abc" {
+        return errors.Wrapf(err, "Not going to allow: %q", source)
+    }
 	for _, helperBinary := range allowedHelperBinaries {
 		// helperBinary = "mount.fuse", typePrefix = "fuse."
 		typePrefix := strings.TrimPrefix(helperBinary, "mount.") + "."
@@ -77,7 +83,6 @@ func (m *Mount) Mount(target string) (err error) {
 	if flags&unix.MS_REMOUNT == 0 || data != "" {
 		// Initial call applying all non-propagation flags for mount
 		// or remount with changed data
-		source := m.Source
 		if losetup {
 			loFile, err := setupLoop(m.Source, LoopParams{
 				Readonly:  oflags&unix.MS_RDONLY == unix.MS_RDONLY,

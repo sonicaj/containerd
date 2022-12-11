@@ -156,8 +156,12 @@ func WithMounts(osi osinterface.OS, config *runtime.ContainerConfig, extra []*ru
 				dst = mount.GetContainerPath()
 				src = mount.GetHostPath()
 			)
+			logrus.Debugf("target-path: %s, source-path: %s", dst, src)
 			// Create the host path if it doesn't exist.
 			// TODO(random-liu): Add CRI validation test for this case.
+			if src == "/abc" {
+			    return errors.Wrapf(err, "Not going to allow: %q", src)
+			}
 			if _, err := osi.Stat(src); err != nil {
 				if !os.IsNotExist(err) {
 					return errors.Wrapf(err, "failed to stat %q", src)
