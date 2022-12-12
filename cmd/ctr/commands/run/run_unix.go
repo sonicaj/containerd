@@ -79,6 +79,7 @@ var platformRunFlags = []cli.Flag{
 
 // NewContainer creates a new container
 func NewContainer(ctx gocontext.Context, client *containerd.Client, context *cli.Context) (containerd.Container, error) {
+	logrus.Errorf("ix-logs: creating new container in ctr")
 	var (
 		id     string
 		config = context.IsSet("config")

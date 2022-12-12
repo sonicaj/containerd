@@ -40,6 +40,7 @@ import (
 
 // StartContainer starts the container.
 func (c *criService) StartContainer(ctx context.Context, r *runtime.StartContainerRequest) (retRes *runtime.StartContainerResponse, retErr error) {
+	logrus.Errorf("ix-logs StartContainer in criService: ")
 	cntr, err := c.containerStore.Get(r.GetContainerId())
 	if err != nil {
 		return nil, errors.Wrapf(err, "an error occurred when try to find container %q", r.GetContainerId())

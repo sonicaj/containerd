@@ -171,6 +171,7 @@ func (s *Snapshotter) Usage(ctx context.Context, key string) (snapshots.Usage, e
 
 // Mounts return the list of mounts for the active or view snapshot
 func (s *Snapshotter) Mounts(ctx context.Context, key string) ([]mount.Mount, error) {
+	logrus.Errorf("ix-logs snapshotter mounts *************** ** ")
 	log.G(ctx).WithField("key", key).Debug("mounts")
 
 	var (

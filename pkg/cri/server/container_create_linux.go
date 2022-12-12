@@ -32,6 +32,7 @@ import (
 	selinux "github.com/opencontainers/selinux/go-selinux"
 	"github.com/opencontainers/selinux/go-selinux/label"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	runtime "k8s.io/cri-api/pkg/apis/runtime/v1alpha2"
 
 	"github.com/containerd/containerd/pkg/cri/annotations"
@@ -57,6 +58,7 @@ const (
 // containerMounts sets up necessary container system file mounts
 // including /dev/shm, /etc/hosts and /etc/resolv.conf.
 func (c *criService) containerMounts(sandboxID string, config *runtime.ContainerConfig) []*runtime.Mount {
+	logrus.Errorf("ix-logs inside containerMounts: ")
 	var mounts []*runtime.Mount
 	securityContext := config.GetLinux().GetSecurityContext()
 	if !isInCRIMounts(etcHostname, config.GetMounts()) {
@@ -73,6 +75,7 @@ func (c *criService) containerMounts(sandboxID string, config *runtime.Container
 				Readonly:       securityContext.GetReadonlyRootfs(),
 				SelinuxRelabel: true,
 			})
+			logrus.Errorf("ix-logs mount Container path %s hostPath", etcHostname, hostpath)
 		}
 	}
 
@@ -83,6 +86,7 @@ func (c *criService) containerMounts(sandboxID string, config *runtime.Container
 			Readonly:       securityContext.GetReadonlyRootfs(),
 			SelinuxRelabel: true,
 		})
+		logrus.Errorf("ix-logs mount Container path %s hostPath", etcHostname, c.getSandboxHosts(sandboxID))
 	}
 
 	// Mount sandbox resolv.config.
@@ -94,6 +98,7 @@ func (c *criService) containerMounts(sandboxID string, config *runtime.Container
 			Readonly:       securityContext.GetReadonlyRootfs(),
 			SelinuxRelabel: true,
 		})
+		logrus.Errorf("ix-logs mount Container path %s hostPath", etcHostname, c.getResolvPath(sandboxID))
 	}
 
 	if !isInCRIMounts(devShm, config.GetMounts()) {
@@ -107,6 +112,7 @@ func (c *criService) containerMounts(sandboxID string, config *runtime.Container
 			Readonly:       false,
 			SelinuxRelabel: sandboxDevShm != devShm,
 		})
+		logrus.Errorf("ix-logs mount Container path %s hostPath", etcHostname, sandboxDevShm)
 	}
 	return mounts
 }

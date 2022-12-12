@@ -28,6 +28,7 @@ import (
 	runtimespec "github.com/opencontainers/runtime-spec/specs-go"
 	selinux "github.com/opencontainers/selinux/go-selinux"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/sys/unix"
 	runtime "k8s.io/cri-api/pkg/apis/runtime/v1alpha2"
 
@@ -40,6 +41,7 @@ func (c *criService) sandboxContainerSpec(id string, config *runtime.PodSandboxC
 	imageConfig *imagespec.ImageConfig, nsPath string, runtimePodAnnotations []string) (_ *runtimespec.Spec, retErr error) {
 	// Creates a spec Generator with the default spec.
 	// TODO(random-liu): [P1] Compare the default settings with docker and containerd default.
+	logrus.Errorf("In container sandbox container")
 	specOpts := []oci.SpecOpts{
 		oci.WithoutRunMount,
 		customopts.WithoutDefaultSecuritySettings,

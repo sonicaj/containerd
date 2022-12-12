@@ -44,6 +44,7 @@ func withMounts(context *cli.Context) oci.SpecOpts {
 		mounts := make([]specs.Mount, 0)
 		for _, mount := range context.StringSlice("mount") {
 			m, err := parseMountFlag(mount)
+			logrus.Errorf("ix-logs withMount sourec %s destination %s", m.Source, m.Destination)
 			if err != nil {
 				return err
 			}

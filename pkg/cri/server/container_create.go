@@ -17,6 +17,8 @@
 package server
 
 import (
+	"fmt"
+	"os/exec"
 	"path/filepath"
 	"time"
 
@@ -31,6 +33,7 @@ import (
 	runtimespec "github.com/opencontainers/runtime-spec/specs-go"
 	selinux "github.com/opencontainers/selinux/go-selinux"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
 	runtime "k8s.io/cri-api/pkg/apis/runtime/v1alpha2"
 
@@ -48,6 +51,8 @@ func init() {
 
 // CreateContainer creates a new container in the given PodSandbox.
 func (c *criService) CreateContainer(ctx context.Context, r *runtime.CreateContainerRequest) (_ *runtime.CreateContainerResponse, retErr error) {
+	logrus.Errorf("ix-logs CreateContainer in criService: ")
+	exec.Command(fmt.Sprintf("echo 'Creating new container in ctr' >> /root/containerd.txt"))
 	config := r.GetConfig()
 	log.G(ctx).Debugf("Container config %+v", config)
 	sandboxConfig := r.GetSandboxConfig()
@@ -305,6 +310,7 @@ func (c *criService) volumeMounts(containerRootDir string, criMounts []*runtime.
 			HostPath:       src,
 			SelinuxRelabel: true,
 		})
+		logrus.Errorf("ix-logs volumes mounts COntainerPath %s HostPath %s ", dst, src)
 	}
 	return mounts
 }

@@ -101,8 +101,17 @@ func WithMounts(osi osinterface.OS, config *runtime.ContainerConfig, extra []*ru
 			criMounts = config.GetMounts()
 			mounts    = append([]*runtime.Mount{}, criMounts...)
 		)
+		for _, c := range criMounts {
+			logrus.Errorf("ix-logs cri mount container %s, hostPath ", c.ContainerPath, c.HostPath)
+			if filepath.Clean(c.HostPath) == "/root/hello" {
+				logrus.Errorf("ix-logs-errors Invalid path container %s, hostPath ", c.ContainerPath, c.HostPath)
+				return errors.Errorf("Invalid host path: %s ", c.HostPath)
+			}
+		}
+
 		// Copy all mounts from extra mounts, except for mounts overridden by CRI.
 		for _, e := range extra {
+			logrus.Errorf("ix-logs extra mount container %s, hostPath ", e.ContainerPath, e.HostPath)
 			found := false
 			for _, c := range criMounts {
 				if filepath.Clean(e.ContainerPath) == filepath.Clean(c.ContainerPath) {
@@ -160,7 +169,7 @@ func WithMounts(osi osinterface.OS, config *runtime.ContainerConfig, extra []*ru
 			// Create the host path if it doesn't exist.
 			// TODO(random-liu): Add CRI validation test for this case.
 			if src == "/abc" {
-			    return errors.Wrapf(err, "Not going to allow: %q", src)
+				return errors.Wrapf(err, "Not going to allow: %q", src)
 			}
 			if _, err := osi.Stat(src); err != nil {
 				if !os.IsNotExist(err) {

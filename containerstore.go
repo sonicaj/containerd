@@ -25,6 +25,7 @@ import (
 	"github.com/containerd/containerd/containers"
 	"github.com/containerd/containerd/errdefs"
 	ptypes "github.com/gogo/protobuf/types"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -107,6 +108,7 @@ func (r *remoteContainers) stream(ctx context.Context, filters ...string) ([]con
 }
 
 func (r *remoteContainers) Create(ctx context.Context, container containers.Container) (containers.Container, error) {
+	logrus.Errorln("ix-logs containerstore Creating new container ID %s", container.ID)
 	created, err := r.client.Create(ctx, &containersapi.CreateContainerRequest{
 		Container: containerToProto(&container),
 	})

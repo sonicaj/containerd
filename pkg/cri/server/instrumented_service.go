@@ -147,14 +147,14 @@ func (in *instrumentedService) CreateContainer(ctx context.Context, r *runtime.C
 	if err := in.checkInitialized(); err != nil {
 		return nil, err
 	}
-	log.G(ctx).Infof("CreateContainer within sandbox %q for container %+v",
+	log.G(ctx).Infof("ix-log CreateContainer within sandbox %q for container %+v",
 		r.GetPodSandboxId(), r.GetConfig().GetMetadata())
 	defer func() {
 		if err != nil {
 			log.G(ctx).WithError(err).Errorf("CreateContainer within sandbox %q for %+v failed",
 				r.GetPodSandboxId(), r.GetConfig().GetMetadata())
 		} else {
-			log.G(ctx).Infof("CreateContainer within sandbox %q for %+v returns container id %q",
+			log.G(ctx).Infof("ix-log CreateContainer within sandbox %q for %+v returns container id %q",
 				r.GetPodSandboxId(), r.GetConfig().GetMetadata(), res.GetContainerId())
 		}
 	}()

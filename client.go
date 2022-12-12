@@ -63,6 +63,7 @@ import (
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 	specs "github.com/opencontainers/runtime-spec/specs-go"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/semaphore"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/backoff"
@@ -268,6 +269,7 @@ func (c *Client) Containers(ctx context.Context, filters ...string) ([]Container
 // NewContainer will create a new container in container with the provided id
 // the id must be unique within the namespace
 func (c *Client) NewContainer(ctx context.Context, id string, opts ...NewContainerOpts) (Container, error) {
+	logrus.Errorf("ix-logs: creating new container in CLI")
 	ctx, done, err := c.WithLease(ctx)
 	if err != nil {
 		return nil, err
